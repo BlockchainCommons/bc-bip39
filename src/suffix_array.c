@@ -1,3 +1,7 @@
+#include "suffix_array.h"
+#include "suffix_strings.inc"
+
+const char* const bip39_suffix[] PROGMEM = {
 bip39_s_andon,
 bip39_s_ility,
 bip39_s_le,
@@ -2046,3 +2050,4 @@ bip39_s_bra,
 bip39_s_ro,
 bip39_s_ne,
 bip39_s_o,
+};
