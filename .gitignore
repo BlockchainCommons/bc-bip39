@@ -96,4 +96,3 @@ config.log
 config.status
 configure.scan
 config.h
-src/test

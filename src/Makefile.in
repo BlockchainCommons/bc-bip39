@@ -34,9 +34,9 @@ $(libname): $(OBJS)
 	$(AR) $(ARFLAGS) $@ $^
 
 bip39.o: bip39.h arduino-support.h index_char.h prefix1.h prefix2.h suffix_array.h
-prefix1.o: prefix1.h index_char.h arduino_support.h
-prefix2.o: prefix2.h index_char.h arduino_support.h
-suffix_array.o: suffix_array.h index_char.h arduino_support.h suffix_strings.inc
+prefix1.o: prefix1.h index_char.h arduino-support.h
+prefix2.o: prefix2.h index_char.h arduino-support.h
+suffix_array.o: suffix_array.h index_char.h arduino-support.h suffix_strings.inc
 
 HEADERS = bc-bip39.h bip39.h
 
