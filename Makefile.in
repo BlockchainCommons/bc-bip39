@@ -48,8 +48,12 @@ distdir: $(distdir)
 $(distdir): FORCE
 	mkdir -p $(distdir)/src
 	mkdir -p $(distdir)/test
-	cp CLA.md CODEOWNERS CONTRIBUTING.md LICENSE README.md $(distdir)
-	cp -r CLA-signed $(distdir)
+	cp $(srcdir)/CLA.md $(distdir)
+	cp $(srcdir)/CODEOWNERS $(distdir)
+	cp $(srcdir)/CONTRIBUTING.md $(distdir)
+	cp $(srcdir)/LICENSE $(distdir)
+	cp $(srcdir)/README.md $(distdir)
+	cp -r $(srcdir)/CLA-signed $(distdir)
 	cp $(srcdir)/bootstrap.sh $(distdir)
 	cp $(srcdir)/configure.ac $(distdir)
 	cp $(srcdir)/configure $(distdir)
@@ -57,6 +61,7 @@ $(distdir): FORCE
 	cp $(srcdir)/install-sh $(distdir)
 	cp $(srcdir)/Makefile.in $(distdir)
 	cp $(srcdir)/src/Makefile.in $(distdir)/src
+	cp $(srcdir)/.gitignore $(distdir)
 	cp $(srcdir)/src/*.c $(distdir)/src
 	cp $(srcdir)/src/*.h $(distdir)/src
 	cp $(srcdir)/src/suffix_strings.inc $(distdir)/src
@@ -64,6 +69,7 @@ $(distdir): FORCE
 	cp $(srcdir)/test/Makefile.in $(distdir)/test
 	cp $(srcdir)/test/*.c $(distdir)/test
 	cp $(srcdir)/test/*.h $(distdir)/test
+	cp $(srcdir)/.gitignore $(distdir)/test
 
 .PHONY: distcheck
 distcheck: $(tarball)
