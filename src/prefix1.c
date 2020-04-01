@@ -1,6 +1,6 @@
 #include "prefix1.h"
 
-const Bip39IndexChar bip39_prefix1[] PROGMEM = {
+const index_char bip39_prefix1[] PROGMEM = {
     { 0, 'a' },
     { 136, 'b' },
     { 253, 'c' },

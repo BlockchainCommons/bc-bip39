@@ -54,15 +54,15 @@ void bip39_dispose_context(void* ctx) {
   free(ctx);
 }
 
-static char bip39_lookup(const Bip39IndexChar *table, uint8_t length, uint16_t n) {
+static char lookup(const index_char *table, uint8_t length, uint16_t n) {
   uint8_t lo = 0;
   uint8_t hi = length;
   uint8_t mid;
-  static Bip39IndexChar m;
+  static index_char m;
 
   while(lo + 1 < hi) {
     mid = (lo + hi) /2;
-    MEMCPY_P(&m, &(table[mid]), sizeof (Bip39IndexChar));
+    MEMCPY_P(&m, &(table[mid]), sizeof (index_char));
     if(m.i < n) {
         lo = mid;
     } else if (m.i > n) {
@@ -72,18 +72,19 @@ static char bip39_lookup(const Bip39IndexChar *table, uint8_t length, uint16_t n
         break;
     }
   } 
-  MEMCPY_P(&m, &table[lo], sizeof (Bip39IndexChar));
+  MEMCPY_P(&m, &table[lo], sizeof (index_char));
   return m.c;
 }
 
 static void load_mnemonic(uint16_t i, char *b)
 {
-  b[0] = bip39_lookup(bip39_prefix1, PREFIX_1_LEN, i);    
-  b[1] = bip39_lookup(bip39_prefix2, PREFIX_2_LEN, i);    
+  b[0] = lookup(bip39_prefix1, PREFIX_1_LEN, i);    
+  b[1] = lookup(bip39_prefix2, PREFIX_2_LEN, i);
   STRCPY_P(b + 2, (char*)PGM_READ_WORD(&(bip39_suffix[i]))); // Necessary casts and dereferencing, just copy.
 }
 
 const char * bip39_get_mnemonic(void* ctx, uint16_t i) {
+  if(i > 2047) { return NULL; }
   context* c = ctx;
   load_mnemonic(i, c->wordBuf);
   return c->wordBuf;
@@ -276,4 +277,73 @@ void bip39_set_word(void* ctx, size_t n, uint16_t w) {
 const uint8_t* bip39_get_payload(const void* ctx) { 
   const context* c = ctx;
   return c->buffer;
+}
+
+int16_t find_in_prefix_1(char c) {
+  for(int i = 0; i < PREFIX_1_LEN; i++) {
+    if(bip39_prefix1[i].c == c) {
+      return bip39_prefix1[i].i;
+    }
+  }
+  return -1;
+}
+
+void find_in_prefix_2(char c, int16_t start_index, int16_t* i1, int16_t* i2) {
+  int lo = 0;
+  int hi = PREFIX_2_LEN;
+  int mid;
+  index_char m;
+
+  while(lo < hi) {
+    mid = (lo + hi) /2;
+    MEMCPY_P(&m, &(bip39_prefix2[mid]), sizeof (index_char));
+    if(m.i < start_index) {
+        lo = mid;
+    } else if (m.i > start_index) {
+        hi = mid;
+    } else {
+        lo = mid;
+        break;
+    }
+  } 
+
+  while(m.c < c) {
+    lo += 1;
+    if(lo == PREFIX_2_LEN) {
+      *i1 = -1;
+      return;
+    }
+    MEMCPY_P(&m, &(bip39_prefix2[lo]), sizeof(index_char));
+  }
+
+  if(m.c == c) {
+    *i1 = m.i;
+    if(lo == PREFIX_2_LEN - 1) {
+      *i2 = 2048;
+    } else {
+      MEMCPY_P(&m, &(bip39_prefix2[lo + 1]), sizeof(index_char));
+      *i2 = m.i;
+    }
+  } else {
+    *i1 = -1;
+  }
+}
+
+int16_t bip39_get_index(const char* mnemonic) {
+  if(mnemonic == NULL) { return -1; }
+  if(strlen(mnemonic) < 3) { return -1; }
+  char c0 = mnemonic[0];
+  int16_t start_index = find_in_prefix_1(c0);
+  char c1 = mnemonic[1];
+  int16_t i1, i2;
+  find_in_prefix_2(c1, start_index, &i1, &i2);
+  const char* s1 = mnemonic + 2;
+  if(i1 == -1) { return -1; }
+  for(int i = i1; i < i2; i++) {
+    const char* s2 = bip39_suffix[i];
+    if(strcmp(s1, s2) == 0) {
+      return i;
+    }
+  }
+  return -1;
 }

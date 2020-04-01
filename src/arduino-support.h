@@ -11,7 +11,7 @@
 #define PROGMEM
 #define MEMCPY_P(x, y, z) memcpy(x, y, z)
 #define STRCPY_P(x, y) strcpy(x, y)
-#define PGM_READ_WORD(x) (x)
+#define PGM_READ_WORD(x) (*x)
 #endif
 
 #endif /* ARDUINO_SUPPORT_H */

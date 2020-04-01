@@ -9,6 +9,9 @@ void* bip39_new_context();
 void bip39_dispose_context(void* ctx);
 const char * bip39_get_mnemonic(void* ctx, uint16_t n);
 
+// Returns -1 if the string is not a valid BIP39 mnemonic.
+int16_t bip39_get_index(const char* mnemonic);
+
 void bip39_start_search(void* ctx);
 void bip39_choose_low(void* ctx);
 void bip39_choose_high(void* ctx);

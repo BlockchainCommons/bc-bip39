@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 
-typedef struct Bip39IndexChar_t {
+typedef struct index_char_t {
     uint16_t i;
     char c;
-} Bip39IndexChar;
+} index_char;
 
 #endif /* INDEX_CHAR_H */

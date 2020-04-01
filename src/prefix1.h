@@ -6,6 +6,6 @@
 
 #define PREFIX_1_LEN 25
 
-extern const Bip39IndexChar bip39_prefix1[] PROGMEM;
+extern const index_char bip39_prefix1[] PROGMEM;
 
 #endif /* PREFIX1_H */

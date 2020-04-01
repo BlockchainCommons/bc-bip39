@@ -10,7 +10,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "make all && dsymutil src/test",
+            "command": "make all && dsymutil test/test",
             "problemMatcher": { "base": "$gcc", "fileLocation": ["relative", "${workspaceRoot}/src"] },
             "group": {
                 "kind": "build",
