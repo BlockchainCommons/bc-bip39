@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([bc-slip39], [1.0])
+AC_INIT([bc-bip39], [1.0])
 AC_CONFIG_SRCDIR([src/bip39.c])
 AC_CONFIG_HEADERS([config.h])
 
