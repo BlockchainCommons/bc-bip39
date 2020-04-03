@@ -6,9 +6,9 @@
             "name": "Build and Debug",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/src/test",
+            "program": "${workspaceFolder}/test/test",
             "args": [],
-            "cwd": "${workspaceFolder}/src",
+            "cwd": "${workspaceFolder}/test",
             "preLaunchTask": "Build"
         }
     ]
