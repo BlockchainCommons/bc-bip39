@@ -1,6 +1,41 @@
-# Blockchain Commons BIP-39
+# [Blockchain Commons BIP-39](https://github.com/BlockchainCommons/bc-bip39)
 
-**Implementation of BIP-39 "Mnemonic code for generating deterministic keys" standard for use in [Blockchain Commons](https://www.BlockchainCommons.com) software projects**
+**Implementation of BIP-39 "Mnemonic code for generating deterministic keys" standard for use in [Blockchain Commons](https://www.BlockchainCommons.com) Software Projects**
+
+## Prerequisites
+
+* If [`bc-crypto-base`](https://github.com/blockchaincommons/bc-crypto-base) is not installed, the `configure` step below will fail.
+
+## Installation
+
+```bash
+$ ./configure
+$ make check
+$ sudo make install
+```
+
+This sequence runs the module's unit tests.
+
+## Use
+
+1. Link against `libbc-bip39.a` and `libbc-crypto-base.a`.
+2. Include the umbrella header in your code:
+
+```c
+#include <bc-bip39/bc-bip39.h>
+```
+
+## Notes for Maintainers
+
+Before accepting a PR that can affect build or unit tests, make sure the following sequence of commands succeeds:
+
+```bash
+$ ./configure
+$ make distcheck
+$ make distclean
+```
+
+`make distcheck` builds a distribution tarball, unpacks it, then configures, builds, and runs unit tests from it, then performs an install and uninstall from a non-system directory and makes sure the uninstall leaves it clean. `make distclean` removes all known byproduct files, and unless you've added files of your own, should leave the directory in a state that could be tarballed for distribution. After a `make distclean` you'll have to run `./configure` again.
 
 ## Origin, Authors, Copyright & Licenses
 
@@ -10,9 +45,10 @@ In most cases, the authors, copyright, and license for each file reside in heade
 
 This table below also establishes provenance (repository of origin, permalink, and commit id) for files included from repositories that are outside of this repository. Contributors to these files are listed in the commit history for each repository, first with changes found in the commit history of this repo, then in changes in the commit history of their repo of their origin.
 
-| File | From | Commit | Authors & Copyright (c) | License |
-| ---- | ---- | ------ | ----------------------- | ------- |
-|      |      |        |                         |         |
+| File      | From                                                         | Commit                                                       | Authors & Copyright (c)                                | License                                                     |
+| --------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------ | ----------------------------------------------------------- |
+|
+|
 
 ### Used with…
 
@@ -22,13 +58,13 @@ These are other projects that work with or leverage `$projectname`:
 
 ### Derived from…
 
-This bc-bip39 project is either derived from or was inspired by:
+This  `$projectname` project is either derived from or was inspired by:
 
-- [howech/bip39/](https://github.com/howech/bip39) — Original bip39 for arduino repo that started this project (from commit [8c4b3d](https://github.com/howech/bip39/commit/8c48b3d4aae490b661cf07dff165e802a920fa54)), by Chris Howe [@howech](https://github.com/howech). Copyright assignment and change of license from [MIT](https://spdx.org/licenses/MIT) to [BSD-2-Clause Plus Patent License](https://spdx.org/licenses/BSD-2-Clause-Patent.html) with permission.
+- [community/repo-name/](https://github.com/community/repo-name) — Repo that does what, by [developer](https://github.com/developer)  or from  [community](https://community.com).
 
 ### Dependencies
 
-To build bc-bip39 you'll need to use the following tools:
+To build the  `$projectname` you'll need to use the following tools:
 
 - autotools - Gnu Build System from Free Software Foundation ([intro](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html)).
 
@@ -40,11 +76,12 @@ We encourage public contributions through issues and pull-requests! Please revie
 
 The following people directly contributed to this repository. You can add your name here by getting involved — the first step is to learn how to contribute from our [CONTRIBUTING.md](./CONTRIBUTING.md) documentation.
 
-| Name              | Role                                     | Github                                            | Email                                 | GPG Fingerprint                                    |
-| ----------------- | ---------------------------------------- | ------------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
-| Christopher Allen | Principal Architect                      | [@ChristopherA](https://github.com/@ChristopherA) | \<ChristopherA@LifeWithAlacrity.com\> | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
-| Chris Howe        | Original version, occasional contributor | [@howech](https://github.com/howech)              | \<chris@howeville.com\>               | 7C3D D38E 16D0 0275 5C0B  82B4 709C 6DA6 EAD3 99A7 |
-| Wolf McNally      | Project Lead                             | [@WolfMcNally](https://github.com/wolfmcnally)    | \<Wolf@WolfMcNally.com\>              | 9436 52EE 3844 1760 C3DC  3536 4B6C 2FCF 8947 80AE |
+| Name              | Role                | Github                                            | Email                                 | GPG Fingerprint                                    |
+| ----------------- | ------------------- | ------------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
+| Christopher Allen | Principal Architect | [@ChristopherA](https://github.com/@ChristopherA) | \<ChristopherA@LifeWithAlacrity.com\> | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
+| Wolf McNally      | Project Lead        | [@WolfMcNally](https://github.com/wolfmcnally)    | \<Wolf@WolfMcNally.com\>              | 9436 52EE 3844 1760 C3DC  3536 4B6C 2FCF 8947 80AE |
+| Ken Sedgwick | Original Author, Occasional Contributor | [@ksedgwic](https://github.com/ksedgwic) | \<ken@bonsai.com\> | 4695 E5B8 F781 BF85 4326  9639 BBFC E515 8602 5550
+| Chris Howe     | Occasional Contributor | [@howech](https://github.com/howech)               | \<chris@howeville.com\>               | 7C3D D38E 16D0 0275 5C0B  82B4 709C 6DA6 EAD3 99A7 |
 
 ## Responsible Disclosure
 
