@@ -11,7 +11,7 @@ AC_PROG_CC
 AC_PROG_INSTALL
 
 # Checks for libraries.
-AC_CHECK_LIB(bc-crypto-base, sha256_Raw, [], [
+AC_CHECK_LIB([bc-crypto-base], [sha256_Raw], [], [
   echo "### Error! libbc-crypto-base must be installed first."
   exit -1
   ])
