@@ -43,8 +43,13 @@ bool hex_digit_to_bin(const char hex, char *out) {
 }
 
 size_t hex_to_data(const char *hex, uint8_t **out) {
-	if (hex == NULL || *hex == '\0' || out == NULL)
+	if (hex == NULL || *hex == '\0') {
+        *out = NULL;
 		return 0;
+    }
+    if (out == NULL) {
+        return 0;
+    }
 
 	size_t len = strlen(hex);
 	if (len % 2 != 0)
