@@ -11,7 +11,7 @@
 
 // Returns the English mnemonic string for the given BIP39 word
 // Returns NULL if the word is out of range (> 2047).
-const char* bip39_mnemonic_from_word(uint16_t word);
+void bip39_mnemonic_from_word(uint16_t word, char* mnemonic);
 
 // Returns the BIP39 word for the given English mnemonic string.
 // Returns -1 if the string is not a valid BIP39 mnemonic.

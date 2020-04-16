@@ -77,9 +77,7 @@ static char lookup(const index_char* table, uint8_t length, uint16_t n) {
 static void load_mnemonic(uint16_t i, char* b) {
     b[0] = lookup(bip39_prefix1, PREFIX_1_LEN, i);
     b[1] = lookup(bip39_prefix2, PREFIX_2_LEN, i);
-    STRCPY_P(b + 2, (char*)PGM_READ_WORD(
-                        &(bip39_suffix[i])));  // Necessary casts and
-                                               // dereferencing, just copy.
+    STRCPY_P(b + 2, bip39_suffix[i]);
 }
 
 const char* bip39_get_mnemonic(void* ctx, uint16_t i) {
@@ -91,11 +89,15 @@ const char* bip39_get_mnemonic(void* ctx, uint16_t i) {
     return c->wordBuf;
 }
 
-const char* bip39_mnemonic_from_word(uint16_t word) {
+void bip39_mnemonic_from_word(uint16_t word, char* mnemonic) {
   context* ctx = bip39_new_context();
   const char* string = bip39_get_mnemonic(ctx, word);
+  if(string == NULL) {
+      mnemonic[0] = '\0';
+  } else {
+      strcpy(mnemonic, string);
+  }
   bip39_dispose_context(ctx);
-  return string;
 }
 
 void bip39_start_search(void* ctx) {
@@ -434,7 +436,8 @@ size_t bip39_mnemonics_from_secret(const uint8_t* secret, size_t secret_len, cha
         if (i != 0) {
             strcat(string, " ");
         }
-        const char* mnemonic = bip39_mnemonic_from_word(words[i]);
+        char mnemonic[20];
+        bip39_mnemonic_from_word(words[i], mnemonic);
         strcat(string, mnemonic);
     }
     size_t mnemonics_len = strlen(string);
