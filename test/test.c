@@ -15,9 +15,10 @@
 static bool _test_mnemonic_from_word(int16_t word, const char* expected) {
     bool result = false;
 
-    const char* mnemonic = bip39_mnemonic_from_word(word);
+    char mnemonic[20];
+    bip39_mnemonic_from_word(word, mnemonic);
     if(expected == NULL) {
-        result = mnemonic == NULL;
+        result = strlen(mnemonic) == 0;
     } else {
         result = equal_strings(mnemonic, expected);
     }
@@ -62,9 +63,9 @@ static void test_seed_from_string() {
         { "mirror", "reject", "rookie", "talk",
         "pudding", "throw", "happy", "era",
         "myth", "already", "payment", "owner" };
-    uint16_t words[] = 
-    { 1132, 1447, 1502, 1772, 
-    1385, 1802, 839, 610, 
+    uint16_t words[] =
+    { 1132, 1447, 1502, 1772,
+    1385, 1802, 839, 610,
     1172, 57, 1293, 1265 };
 
     uint8_t seed[BIP39_SEED_LEN];
