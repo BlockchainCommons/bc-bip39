@@ -1,66 +1,75 @@
 #ifndef BIP39_H
 #define BIP39_H
 
-#include <inttypes.h>
-#include <sha256.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
 
-#define BIP39_BUF_MAX 40
+//
+// The following API is high-level and recommended.
+//
 
-// This class provides a couple of services related to Bip39 mnemonic sentences
-// First, it provides a way to look up english mnemonics by the code word that
-// they represent.
-// Next, it provides a means to generate a checksum on a sequence of bytes
-// and then generate a series of words from that, or it provides you with
-// a mechanism to input a sequence of words, verify the checksum and extract
-// the original paylaod.
+// Returns the English mnemonic string for the given BIP39 word
+// Returns NULL if the word is out of range (> 2047).
+void bip39_mnemonic_from_word(uint16_t word, char* mnemonic);
 
-class Bip39 {
-  private:
-  char wordBuf[9];  
-  char wordBufHi[9];
+// Returns the BIP39 word for the given English mnemonic string.
+// Returns -1 if the string is not a valid BIP39 mnemonic.
+int16_t bip39_word_from_mnemonic(const char* mnemonic);
 
-  uint16_t lo;
-  uint16_t mid;
-  uint16_t hi;
-  
-  uint8_t payloadBytes = 32;
-  uint8_t payloadWords = 24;
+// Writes out the BIP39 words for the given secret.
+// Returns the number of words written;
+size_t bip39_words_from_secret(const uint8_t* secret, size_t secret_len, uint16_t* words, size_t max_words_len);
 
-  uint8_t buffer[BIP39_BUF_MAX];
-  uint8_t *computeChecksum();
+// Writes out the BIP39 English mnemonics for the given secret.
+// Returns the length of the string written.
+size_t bip39_mnemonics_from_secret(const uint8_t* secret, size_t secret_len, char* mnemonics, size_t max_mnemonics_len);
 
-  uint8_t currentWord;
-  void loadMnemonic(uint16_t i, char *b);
- public:
-  Bip39() {}
-  const char * getMnemonic(uint16_t n);
+// Writes out the BIP39 words for the given English mnemonics.
+// Returns the number of words written.
+size_t bip39_words_from_mnemonics(const char* mnemonics, uint16_t* words, size_t max_words_len);
 
-  void startSearch();
-  void chooseLow();
-  void chooseHigh();
-  
-  const char * getLow() const { return wordBuf; }
-  const char * getHigh() const { return wordBufHi; }
-  const bool doneSearch() const { return lo == mid; }
-  const uint16_t selectedWord() const { return lo; }
-  
-  void setPayloadBytes(uint8_t bytes);
-  void setPayloadWords(uint8_t words);
+// Writes out the secret for the given English mnemonics.
+// Returns the number of bytes written.
+size_t bip39_secret_from_mnemonics(const char* mnemonics, uint8_t* secret, size_t max_secret_len);
 
-  uint8_t getPayloadBytes() {return payloadBytes;}
-  uint8_t getPayloadWords() {return payloadWords;}
+// Writes the 32-byte (BIP39_SEED_LEN) SHA256 hash of `string` to `seed`.
+#define BIP39_SEED_LEN 32
+void bip39_seed_from_string(const char* string, uint8_t* seed);
 
-  uint16_t getWord(uint8_t) const;  
-  void setWord(uint8_t i, uint16_t word);
 
-  void setPayload(uint8_t length, uint8_t *bytes);
-  
-  bool verifyChecksum() const;
-  void appendChecksum();
-  
-  const uint8_t* getPayload() const { return buffer; }
-  void clear();
+//
+// The following API is low-level and requires the creation of a context handle.
+//
 
-};
+void* bip39_new_context();
+void bip39_dispose_context(void* ctx);
+
+const char* bip39_get_mnemonic(void* ctx, uint16_t n);
+
+void bip39_start_search(void* ctx);
+void bip39_choose_low(void* ctx);
+void bip39_choose_high(void* ctx);
+
+const char* bip39_get_low(const void* ctx);
+const char* bip39_get_high(const void* ctx);
+const bool bip39_done_search(const void* ctx);
+const uint16_t bip39_selected_word(const void* ctx);
+
+void bip39_set_byte_count(void* ctx, size_t bytes);
+void bip39_set_bytes(void* ctx, const uint8_t* bytes, size_t length);
+const uint8_t* bip39_get_bytes(const void* ctx);
+
+void bip39_set_word_count(void* ctx, size_t words);
+size_t bip39_get_word_count(const void* ctx);
+void bip39_set_word(void* ctx, size_t n, uint16_t w);
+uint16_t bip39_get_word(const void* ctx, size_t n);
+
+void bip39_set_payload(void* ctx, size_t length, const uint8_t* bytes);
+
+void bip39_append_checksum(void* ctx);
+bool bip39_verify_checksum(const void* ctx);
+
+void bip39_clear(void* ctx);
 
 #endif
