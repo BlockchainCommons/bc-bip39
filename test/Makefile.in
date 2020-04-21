@@ -22,6 +22,11 @@ bindir = @bindir@
 srcdir = @srcdir@
 VPATH = @srcdir@
 
+# Terminal colors
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+RESET=`tput sgr0`
+
 CFLAGS = -g -O0
 
 .PHONY: all
@@ -44,7 +49,7 @@ test-utils.o: test-utils.h
 .PHONY: check
 check: test
 	./test
-	@echo "*** ALL TESTS PASSED ***"
+	@echo "$(GREEN)*** ALL TESTS PASSED ***$(RESET)"
 
 .PHONY: clean
 clean:
