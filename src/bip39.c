@@ -488,16 +488,20 @@ size_t bip39_secret_from_mnemonics(const char *mnemonics, uint8_t *secret,
   }
   size_t secret_len = bip39_get_byte_count(ctx);
   if (secret_len > max_secret_len) {
-    return 0;
+    goto fail;
   }
   if (!bip39_verify_checksum(ctx)) {
-    return 0;
+    goto fail;
   }
   memcpy(secret, bip39_get_bytes(ctx), secret_len);
 
   bip39_dispose_context(ctx);
 
   return secret_len;
+
+fail:
+  bip39_dispose_context(ctx);
+  return 0;
 }
 
 void bip39_seed_from_string(const char *string, uint8_t *seed) {
