@@ -26,7 +26,7 @@
 
 #define BIP39_BUF_MAX 40
 
-typedef struct context_t {
+struct bip39_context_struct {
   char wordBuf[9];
   char wordBufHi[9];
 
@@ -40,17 +40,16 @@ typedef struct context_t {
   uint8_t buffer[BIP39_BUF_MAX];
 
   uint8_t currentWord;
-} context;
+};
 
-void *bip39_new_context() {
-  size_t context_len = sizeof(context);
-  context *ctx = calloc(context_len, 1);
+bip39_context_t *bip39_new_context() {
+  bip39_context_t *ctx = calloc(sizeof(bip39_context_t), 1);
   ctx->payload_byte_count = 32;
   ctx->payload_word_count = 24;
   return ctx;
 }
 
-void bip39_dispose_context(void *ctx) { free(ctx); }
+void bip39_dispose_context(bip39_context_t *ctx) { free(ctx); }
 
 static char lookup(const index_char *table, uint8_t length, uint16_t n) {
   uint8_t lo = 0;
@@ -80,17 +79,16 @@ static void load_mnemonic(uint16_t i, char *b) {
   STRCPY_P(b + 2, bip39_suffix[i]);
 }
 
-const char *bip39_get_mnemonic(void *ctx, uint16_t i) {
+const char *bip39_get_mnemonic(bip39_context_t *ctx, uint16_t i) {
   if (i > 2047) {
     return NULL;
   }
-  context *c = ctx;
-  load_mnemonic(i, c->wordBuf);
-  return c->wordBuf;
+  load_mnemonic(i, ctx->wordBuf);
+  return ctx->wordBuf;
 }
 
 void bip39_mnemonic_from_word(uint16_t word, char *mnemonic) {
-  context *ctx = bip39_new_context();
+  bip39_context_t *ctx = bip39_new_context();
   const char *string = bip39_get_mnemonic(ctx, word);
   if (string == NULL) {
     mnemonic[0] = '\0';
@@ -100,110 +98,94 @@ void bip39_mnemonic_from_word(uint16_t word, char *mnemonic) {
   bip39_dispose_context(ctx);
 }
 
-void bip39_start_search(void *ctx) {
-  context *c = ctx;
-  c->lo = 0;
-  c->hi = 2048;
-  c->mid = (c->lo + c->hi) / 2;
-  load_mnemonic(c->lo, c->wordBuf);
-  load_mnemonic(c->mid, c->wordBufHi);
+void bip39_start_search(bip39_context_t *ctx) {
+  ctx->lo = 0;
+  ctx->hi = 2048;
+  ctx->mid = (ctx->lo + ctx->hi) / 2;
+  load_mnemonic(ctx->lo, ctx->wordBuf);
+  load_mnemonic(ctx->mid, ctx->wordBufHi);
 }
 
-void bip39_choose_low(void *ctx) {
-  context *c = ctx;
-  c->hi = c->mid;
-  c->mid = (c->lo + c->hi) / 2;
-  load_mnemonic(c->mid, c->wordBufHi);
+void bip39_choose_low(bip39_context_t *ctx) {
+  ctx->hi = ctx->mid;
+  ctx->mid = (ctx->lo + ctx->hi) / 2;
+  load_mnemonic(ctx->mid, ctx->wordBufHi);
 }
 
-void bip39_choose_high(void *ctx) {
-  context *c = ctx;
-  c->lo = c->mid;
-  c->mid = (c->lo + c->hi) / 2;
-  load_mnemonic(c->lo, c->wordBuf);
-  load_mnemonic(c->mid, c->wordBufHi);
+void bip39_choose_high(bip39_context_t *ctx) {
+  ctx->lo = ctx->mid;
+  ctx->mid = (ctx->lo + ctx->hi) / 2;
+  load_mnemonic(ctx->lo, ctx->wordBuf);
+  load_mnemonic(ctx->mid, ctx->wordBufHi);
 }
 
-const char *bip39_get_low(const void *ctx) {
-  const context *c = ctx;
-  return c->wordBuf;
+const char *bip39_get_low(const bip39_context_t *ctx) { return ctx->wordBuf; }
+
+const char *bip39_get_high(const bip39_context_t *ctx) {
+  return ctx->wordBufHi;
 }
 
-const char *bip39_get_high(const void *ctx) {
-  const context *c = ctx;
-  return c->wordBufHi;
+const bool bip39_done_search(const bip39_context_t *ctx) {
+  return ctx->lo == ctx->mid;
 }
 
-const bool bip39_done_search(const void *ctx) {
-  const context *c = ctx;
-  return c->lo == c->mid;
-}
-
-const uint16_t bip39_selected_word(const void *ctx) {
-  const context *c = ctx;
-  return c->lo;
+const uint16_t bip39_selected_word(const bip39_context_t *ctx) {
+  return ctx->lo;
 }
 
 // NOTE that there is something fishy here.
 // 25 * 8 = 200 / 11
-void bip39_set_byte_count(void *ctx, size_t bytes) {
-  context *c = ctx;
-  c->payload_byte_count = bytes;
-  c->payload_word_count = ((uint16_t)bytes * 3 + 2) / 4;
+void bip39_set_byte_count(bip39_context_t *ctx, size_t bytes) {
+  ctx->payload_byte_count = bytes;
+  ctx->payload_word_count = ((uint16_t)bytes * 3 + 2) / 4;
 }
 
-void bip39_set_word_count(void *ctx, size_t words) {
-  context *c = ctx;
-  c->payload_word_count = words;
-  c->payload_byte_count = ((uint16_t)words * 11 - 1) / 8;
+void bip39_set_word_count(bip39_context_t *ctx, size_t words) {
+  ctx->payload_word_count = words;
+  ctx->payload_byte_count = ((uint16_t)words * 11 - 1) / 8;
 }
 
-size_t bip39_get_word_count(const void *ctx) {
-  const context *c = ctx;
-  return c->payload_word_count;
+size_t bip39_get_word_count(const bip39_context_t *ctx) {
+  return ctx->payload_word_count;
 }
 
-uint8_t bip39_get_byte_count(const void *ctx) {
-  const context *c = ctx;
-  return c->payload_byte_count;
+uint8_t bip39_get_byte_count(const bip39_context_t *ctx) {
+  return ctx->payload_byte_count;
 }
 
-static uint8_t *compute_checksum(const void *ctx) {
-  const context *c = ctx;
-
+static uint8_t *compute_checksum(const bip39_context_t *ctx) {
   uint8_t *digest = malloc(SHA256_DIGEST_LENGTH);
-  sha256_Raw(c->buffer, c->payload_byte_count, digest);
+  sha256_Raw(ctx->buffer, ctx->payload_byte_count, digest);
   return digest;
 }
 
-void bip39_append_checksum(void *ctx) {
-  context *c = ctx;
+void bip39_append_checksum(bip39_context_t *ctx) {
 
   uint8_t *res = compute_checksum(ctx);
 
-  c->buffer[c->payload_byte_count] = res[0];
-  c->buffer[c->payload_byte_count + 1] = res[1];
+  ctx->buffer[ctx->payload_byte_count] = res[0];
+  ctx->buffer[ctx->payload_byte_count + 1] = res[1];
 
   free(res);
 }
 
-bool bip39_verify_checksum(const void *ctx) {
-  const context *c = ctx;
+bool bip39_verify_checksum(const bip39_context_t *ctx) {
 
-  uint8_t checksum_bits = 11 - ((c->payload_byte_count * 8) % 11);
+  uint8_t checksum_bits = 11 - ((ctx->payload_byte_count * 8) % 11);
   uint8_t *res = compute_checksum(ctx);
 
-  uint8_t mask;
+  uint8_t mask = 0;
 
-  bool result;
+  bool result = false;
 
   if (checksum_bits <= 8) {
     mask = 0xFF << (8 - checksum_bits);
-    result = (c->buffer[c->payload_byte_count] & mask) == (res[0] & mask);
+    result = (ctx->buffer[ctx->payload_byte_count] & mask) == (res[0] & mask);
   } else {
     mask = 0xFF << (16 - checksum_bits);
-    result = c->buffer[c->payload_byte_count] == res[0] &&
-             (c->buffer[c->payload_byte_count + 1] & mask) == (res[1] & mask);
+    result =
+        ctx->buffer[ctx->payload_byte_count] == res[0] &&
+        (ctx->buffer[ctx->payload_byte_count + 1] & mask) == (res[1] & mask);
   }
 
   free(res);
@@ -211,20 +193,17 @@ bool bip39_verify_checksum(const void *ctx) {
   return result;
 }
 
-void bip39_clear(void *ctx) {
-  context *c = ctx;
-
+void bip39_clear(bip39_context_t *ctx) {
   for (uint16_t i = 0; i < BIP39_BUF_MAX; i++) {
-    c->buffer[i] = 0;
+    ctx->buffer[i] = 0;
   }
   for (uint8_t i = 0; i < 9; i++) {
-    c->wordBuf[i] = 0;
-    c->wordBufHi[i] = 0;
+    ctx->wordBuf[i] = 0;
+    ctx->wordBufHi[i] = 0;
   }
 }
 
-uint16_t bip39_get_word(const void *ctx, size_t n) {
-  const context *c = ctx;
+uint16_t bip39_get_word(const bip39_context_t *ctx, size_t n) {
 
   // Get the nth word from the buffer
   size_t bit_index = 11 * n;
@@ -238,17 +217,17 @@ uint16_t bip39_get_word(const void *ctx, size_t n) {
   }
 
   size_t byte_index = start_byte_index;
-  uint8_t byte = c->buffer[byte_index];
+  uint8_t byte = ctx->buffer[byte_index];
   uint16_t word = (byte << bits_at_next_index) & 0x7FF;
   byte_index++;
 
   while (byte_index < BIP39_BUF_MAX) {
     if (bits_at_next_index > 8) {
       bits_at_next_index = bits_at_next_index - 8;
-      byte = c->buffer[byte_index];
+      byte = ctx->buffer[byte_index];
       word |= byte << bits_at_next_index;
     } else {
-      byte = c->buffer[byte_index];
+      byte = ctx->buffer[byte_index];
       word |= byte >> (8 - bits_at_next_index);
       break;
     }
@@ -257,8 +236,7 @@ uint16_t bip39_get_word(const void *ctx, size_t n) {
   return word;
 }
 
-void bip39_set_word(void *ctx, size_t n, uint16_t w) {
-  context *c = ctx;
+void bip39_set_word(bip39_context_t *ctx, size_t n, uint16_t w) {
 
   // Set the nth word in the buffer to w
   uint16_t b = 11 * (uint16_t)n;
@@ -276,34 +254,33 @@ void bip39_set_word(void *ctx, size_t n, uint16_t w) {
 
   // This might be a partial byte,
   // so only set the bits that we are interested in
-  c->buffer[j] &= ~(0x7FF >> down);
-  c->buffer[j++] |= (w >> down);
+  ctx->buffer[j] &= ~(0x7FF >> down);
+  ctx->buffer[j++] |= (w >> down);
 
   while (j < BIP39_BUF_MAX) {
     if (down > 8) {
       down = down - 8;
-      c->buffer[j++] = (w >> down);
+      ctx->buffer[j++] = (w >> down);
     } else {
       // again, may be a partial byte
-      c->buffer[j] &= ~(0x7FF << (8 - down));
-      c->buffer[j] |= (w << (8 - down));
+      ctx->buffer[j] &= ~(0x7FF << (8 - down));
+      ctx->buffer[j] |= (w << (8 - down));
       break;
     }
   }
 }
 
-const uint8_t *bip39_get_bytes(const void *ctx) {
-  const context *c = ctx;
-  return c->buffer;
+const uint8_t *bip39_get_bytes(const bip39_context_t *ctx) {
+  return ctx->buffer;
 }
 
-void bip39_set_bytes(void *ctx, const uint8_t *bytes, size_t length) {
+void bip39_set_bytes(bip39_context_t *ctx, const uint8_t *bytes,
+                     size_t length) {
   if (length >= BIP39_BUF_MAX) {
     return;
   }
-  context *c = ctx;
   for (int i = 0; i < length; i++) {
-    c->buffer[i] = bytes[i];
+    ctx->buffer[i] = bytes[i];
   }
 }
 
@@ -382,13 +359,13 @@ int16_t bip39_word_from_mnemonic(const char *mnemonic) {
   return -1;
 }
 
-void bip39_set_payload(void *ctx, size_t length, const uint8_t *bytes) {
+void bip39_set_payload(bip39_context_t *ctx, size_t length,
+                       const uint8_t *bytes) {
   if (length > BIP39_BUF_MAX) {
     return;
   }
-  context *c = ctx;
   bip39_clear(ctx);
-  memcpy(c->buffer, bytes, length);
+  memcpy(ctx->buffer, bytes, length);
   bip39_append_checksum(ctx);
 }
 
@@ -404,7 +381,7 @@ size_t bip39_words_from_secret(const uint8_t *secret, size_t secret_len,
     return 0;
   }
 
-  void *ctx = bip39_new_context();
+  bip39_context_t *ctx = bip39_new_context();
 
   bip39_set_byte_count(ctx, secret_len);
   bip39_set_payload(ctx, secret_len, secret);
@@ -502,7 +479,8 @@ size_t bip39_secret_from_mnemonics(const char *mnemonics, uint8_t *secret,
   if (words_len == 0) {
     return 0;
   }
-  void *ctx = bip39_new_context();
+
+  bip39_context_t *ctx = bip39_new_context();
 
   bip39_set_word_count(ctx, words_len);
   for (int i = 0; i < words_len; i++) {

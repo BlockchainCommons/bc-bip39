@@ -45,34 +45,38 @@ void bip39_seed_from_string(const char *string, uint8_t *seed);
 // The following API is low-level and requires the creation of a context handle.
 //
 
-void *bip39_new_context();
-void bip39_dispose_context(void *ctx);
+typedef struct bip39_context_struct bip39_context_t;
 
-const char *bip39_get_mnemonic(void *ctx, uint16_t n);
+bip39_context_t *bip39_new_context();
+void bip39_dispose_context(bip39_context_t *ctx);
 
-void bip39_start_search(void *ctx);
-void bip39_choose_low(void *ctx);
-void bip39_choose_high(void *ctx);
+const char *bip39_get_mnemonic(bip39_context_t *ctx, uint16_t n);
 
-const char *bip39_get_low(const void *ctx);
-const char *bip39_get_high(const void *ctx);
-const bool bip39_done_search(const void *ctx);
-const uint16_t bip39_selected_word(const void *ctx);
+void bip39_start_search(bip39_context_t *ctx);
+void bip39_choose_low(bip39_context_t *ctx);
+void bip39_choose_high(bip39_context_t *ctx);
 
-void bip39_set_byte_count(void *ctx, size_t bytes);
-void bip39_set_bytes(void *ctx, const uint8_t *bytes, size_t length);
-const uint8_t *bip39_get_bytes(const void *ctx);
+const char *bip39_get_low(const bip39_context_t *ctx);
+const char *bip39_get_high(const bip39_context_t *ctx);
+const bool bip39_done_search(const bip39_context_t *ctx);
+const uint16_t bip39_selected_word(const bip39_context_t *ctx);
 
-void bip39_set_word_count(void *ctx, size_t words);
-size_t bip39_get_word_count(const void *ctx);
-void bip39_set_word(void *ctx, size_t n, uint16_t w);
-uint16_t bip39_get_word(const void *ctx, size_t n);
+void bip39_set_byte_count(bip39_context_t *ctx, size_t bytes);
+uint8_t bip39_get_byte_count(const bip39_context_t *ctx);
+void bip39_set_bytes(bip39_context_t *ctx, const uint8_t *bytes, size_t length);
+const uint8_t *bip39_get_bytes(const bip39_context_t *ctx);
 
-void bip39_set_payload(void *ctx, size_t length, const uint8_t *bytes);
+void bip39_set_word_count(bip39_context_t *ctx, size_t words);
+size_t bip39_get_word_count(const bip39_context_t *ctx);
+void bip39_set_word(bip39_context_t *ctx, size_t n, uint16_t w);
+uint16_t bip39_get_word(const bip39_context_t *ctx, size_t n);
 
-void bip39_append_checksum(void *ctx);
-bool bip39_verify_checksum(const void *ctx);
+void bip39_set_payload(bip39_context_t *ctx, size_t length,
+                       const uint8_t *bytes);
 
-void bip39_clear(void *ctx);
+void bip39_append_checksum(bip39_context_t *ctx);
+bool bip39_verify_checksum(const bip39_context_t *ctx);
+
+void bip39_clear(bip39_context_t *ctx);
 
 #endif
