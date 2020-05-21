@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 typedef struct index_char_t {
-    uint16_t i;
-    char c;
+  uint16_t i;
+  char c;
 } index_char;
 
 #endif /* INDEX_CHAR_H */
