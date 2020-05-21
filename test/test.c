@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <bc-crypto-base/bc-crypto-base.h>
 #include <stdio.h>
+#include <string.h>
 #include <strings.h>
 
 static bool _test_mnemonic_from_word(int16_t word, const char *expected) {
