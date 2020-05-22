@@ -69,7 +69,7 @@ static void test_seed_from_string() {
   bip39_seed_from_string(rolls, seed);
   assert(memcmp(ref_secret, seed, secret_len) == 0);
 
-  void *ctx = bip39_new_context();
+  bip39_context_t *ctx = bip39_new_context();
 
   bip39_set_byte_count(ctx, secret_len);
   bip39_set_payload(ctx, secret_len, seed);
