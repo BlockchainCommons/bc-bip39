@@ -371,9 +371,6 @@ void bip39_set_payload(bip39_context_t *ctx, size_t length,
 
 size_t bip39_words_from_secret(const uint8_t *secret, size_t secret_len,
                                uint16_t *words, size_t max_words_len) {
-  if (secret_len % 4 != 0) {
-    return 0;
-  }
   if (secret_len < 8) {
     return 0;
   }
