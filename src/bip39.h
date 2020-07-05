@@ -63,7 +63,11 @@ const uint8_t* bip39_get_bytes(const void* ctx);
 void bip39_set_word_count(void* ctx, size_t words);
 size_t bip39_get_word_count(const void* ctx);
 void bip39_set_word(void* ctx, size_t n, uint16_t w);
+#ifdef ARDUINO
+uint16_t bip39_getword(const void* ctx, size_t n);
+#else
 uint16_t bip39_get_word(const void* ctx, size_t n);
+#endif
 
 void bip39_set_payload(void* ctx, size_t length, const uint8_t* bytes);
 

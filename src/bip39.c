@@ -224,6 +224,41 @@ void bip39_clear(void* ctx) {
     }
 }
 
+#ifdef ARDUINO
+uint16_t bip39_getword(const void* ctx, size_t n) {
+    const context* c = ctx;
+
+    // Get the nth word from the buffer
+    size_t bit_index = 11 * n;
+    size_t start_byte_index = bit_index / 8;
+    size_t bits_at_index =
+        8 - (bit_index % 8);  // number of bits of b[j] that belong to w
+    size_t bits_at_next_index = 11 - bits_at_index;
+
+    if (start_byte_index >= BIP39_BUF_MAX) {
+        return 0xFFFF;
+    }
+
+    size_t byte_index = start_byte_index;
+    uint8_t byte = c->buffer[byte_index];
+    uint16_t word = (byte << bits_at_next_index) & 0x7FF;
+    byte_index++;
+
+    while (byte_index < BIP39_BUF_MAX) {
+        if (bits_at_next_index > 8) {
+            bits_at_next_index = bits_at_next_index - 8;
+            byte = c->buffer[byte_index];
+            word |= byte << bits_at_next_index;
+        } else {
+            byte = c->buffer[byte_index];
+            word |= byte >> (8 - bits_at_next_index);
+            break;
+        }
+        byte_index++;
+    }
+    return word;
+}
+#else
 uint16_t bip39_get_word(const void* ctx, size_t n) {
     const context* c = ctx;
 
@@ -257,6 +292,7 @@ uint16_t bip39_get_word(const void* ctx, size_t n) {
     }
     return word;
 }
+#endif
 
 void bip39_set_word(void* ctx, size_t n, uint16_t w) {
     context* c = ctx;
