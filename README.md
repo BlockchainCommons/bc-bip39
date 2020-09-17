@@ -8,13 +8,35 @@
 
 ## Installation
 
+This sequence also runs the module's unit tests.
+
+### MacOS
+
 ```bash
 $ ./configure
 $ make check
 $ sudo make install
 ```
 
-This sequence runs the module's unit tests.
+### Linux
+
+Make sure you have llvm/clang.
+
+#### Ubuntu and Debian
+
+```bash
+$ sudo apt-get install make
+
+$ wget https://apt.llvm.org/llvm.sh
+$ chmod +x llvm.sh
+$ sudo ./llvm.sh 10  # version 10
+```
+
+```bash
+$ export CC="clang-10" && ./configure
+$ make check
+$ sudo make install
+```
 
 ## Use
 

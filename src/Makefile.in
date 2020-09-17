@@ -45,8 +45,8 @@ suffix_array.o: suffix_array.h index_char.h arduino-support.h suffix_strings.inc
 
 HEADERS = bc-bip39.h bip39.h
 
-libdir = $(DESTDIR)/$(prefix)/lib
-includedir = $(DESTDIR)/$(prefix)/include/$(package)
+libdir = $(DESTDIR)$(prefix)/lib
+includedir = $(DESTDIR)$(prefix)/include/$(package)
 
 .PHONY: install
 install: $(libname)
