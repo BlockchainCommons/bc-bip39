@@ -5,12 +5,12 @@
 //  Licensed under the "BSD-2-Clause Plus Patent License"
 //
 
-#include <stdio.h>
-#include <assert.h>
-#include <strings.h>
 #include "../src/bc-bip39.h"
 #include "test-utils.h"
+#include <assert.h>
 #include <bc-crypto-base/bc-crypto-base.h>
+#include <stdio.h>
+#include <string.h>
 
 static bool _test_mnemonic_from_word(int16_t word, const char* expected) {
     bool result = false;
