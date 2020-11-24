@@ -55,11 +55,10 @@ void bip39_dispose_context(void* ctx) { free(ctx); }
 static char lookup(const index_char* table, uint8_t length, uint16_t n) {
     uint8_t lo = 0;
     uint8_t hi = length;
-    uint8_t mid;
     static index_char m;
 
     while (lo + 1 < hi) {
-        mid = (lo + hi) / 2;
+        uint8_t mid = (lo + hi) / 2;
         MEMCPY_P(&m, &(table[mid]), sizeof(index_char));
         if (m.i < n) {
             lo = mid;
@@ -320,11 +319,10 @@ int16_t find_in_prefix_1(char c) {
 void find_in_prefix_2(char c, int16_t start_index, int16_t* i1, int16_t* i2) {
     int lo = 0;
     int hi = PREFIX_2_LEN;
-    int mid;
     index_char m;
 
     while (lo < hi) {
-        mid = (lo + hi) / 2;
+        int mid = (lo + hi) / 2;
         MEMCPY_P(&m, &(bip39_prefix2[mid]), sizeof(index_char));
         if (m.i < start_index) {
             lo = mid;
