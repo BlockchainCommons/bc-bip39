@@ -1,12 +1,14 @@
 # [Blockchain Commons BIP-39](https://github.com/BlockchainCommons/bc-bip39)
 
-**Implementation of BIP-39 "Mnemonic code for generating deterministic keys" standard for use in [Blockchain Commons](https://www.BlockchainCommons.com) Software Projects**
+### _by Wolf McNally, Ken Sedgwick, and Christopher Allen, with Chris Howe_
+
+**Blockchain Commons BIP-39** is an implementation of BIP-39 "Mnemonic code for generating deterministic keys" standard for use in [Blockchain Commons](https://www.BlockchainCommons.com) Software Projects.
 
 ## Prerequisites
 
 * If [`bc-crypto-base`](https://github.com/blockchaincommons/bc-crypto-base) is not installed, the `configure` step below will fail.
 
-## Installation
+## Installation Instructions
 
 This sequence also runs the module's unit tests.
 
@@ -38,7 +40,7 @@ $ make check
 $ sudo make install
 ```
 
-## Use
+## Usage Instructions
 
 1. Link against `libbc-bip39.a` and `libbc-crypto-base.a`.
 2. Include the umbrella header in your code:
