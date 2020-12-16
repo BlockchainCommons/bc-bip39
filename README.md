@@ -1,6 +1,8 @@
 # [Blockchain Commons BIP-39](https://github.com/BlockchainCommons/bc-bip39)
 
-### _by Wolf McNally, Ken Sedgwick, and Christopher Allen, with Chris Howe_
+### _by [Wolf McNally](https://www.github.com/wolfmcnally), [Ken Sedgwick](https://www.github.com/ksedwic), and [Christopher Allen](https://www.github.com/ChristopherA), with [Chris Howe](https://www.github.com/howech)_
+
+* <img src="https://github.com/BlockchainCommons/crypto-commons/blob/master/images/logos/crypto-commons-super-simple.png" width=16 valign="bottom">&nbsp;&nbsp; ***part of the [crypto commons](https://github.com/BlockchainCommons/crypto-commons/blob/master/README.md) technology family***
 
 **Blockchain Commons BIP-39** is an implementation of BIP-39 "Mnemonic code for generating deterministic keys" standard for use in [Blockchain Commons](https://www.BlockchainCommons.com) Software Projects.
 
