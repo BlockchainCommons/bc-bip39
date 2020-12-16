@@ -1,6 +1,6 @@
 # [Blockchain Commons BIP-39](https://github.com/BlockchainCommons/bc-bip39)
 
-### _by [Wolf McNally](https://www.github.com/wolfmcnally), [Ken Sedgwick](https://www.github.com/ksedwic), and [Christopher Allen](https://www.github.com/ChristopherA), with [Chris Howe](https://www.github.com/howech)_
+### _by [Wolf McNally](https://www.github.com/wolfmcnally), [Ken Sedgwick](https://www.github.com/ksedgwic), and [Christopher Allen](https://www.github.com/ChristopherA), with [Chris Howe](https://www.github.com/howech)_
 
 * <img src="https://github.com/BlockchainCommons/crypto-commons/blob/master/images/logos/crypto-commons-super-simple.png" width=16 valign="bottom">&nbsp;&nbsp; ***part of the [crypto commons](https://github.com/BlockchainCommons/crypto-commons/blob/master/README.md) technology family***
 
