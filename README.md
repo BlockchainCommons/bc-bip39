@@ -29,15 +29,11 @@ Make sure you have llvm/clang.
 #### Ubuntu and Debian
 
 ```bash
-$ sudo apt-get install make
-
-$ wget https://apt.llvm.org/llvm.sh
-$ chmod +x llvm.sh
-$ sudo ./llvm.sh 10  # version 10
+$ sudo apt-get install make clang
 ```
 
 ```bash
-$ export CC="clang-10" && ./configure
+$ export CC="clang-14" && ./configure
 $ make check
 $ sudo make install
 ```
